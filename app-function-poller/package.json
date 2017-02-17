@@ -1,0 +1,14 @@
+{
+  "name": "app-function-poller",
+  "version": "1.0.0",
+  "description": "Poller App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "q": "^1.4.1"
+  }
+}
