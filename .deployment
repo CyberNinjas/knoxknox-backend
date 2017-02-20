@@ -1,0 +1,8 @@
+[config]
+command = D:\home\site\repository\.deploy\deploy.cmd
+SCM_POST_DEPLOYMENT_ACTIONS_PATH = D:\home\site\repository\.deploy\post-deploy
+SCM_COMMAND_IDLE_TIMEOUT=900
+WEBPACK_OUTPUT_FILE = azure.deps.js
+DEPLOY_DIST_FOLDER = dist
+DEPLOY_COPY_FILES = [ "index.js",  "%WEBPACK_OUTPUT_FILE%, "package.json" ]
+DEPLOY_EXCLUDE_FILES = [".git", ".deploy", ".idea", "node_modules", "dist"]
