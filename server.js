@@ -10,7 +10,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var dbConfig = require('./config/database.js');
 
-app.use(express.static( __dirname + '/public' ));
+app.use(express.static( __dirname + '/app/public' ));
 
 //connect to database
 mongoose.Promise = global.Promise;
