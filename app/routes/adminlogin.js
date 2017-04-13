@@ -1,7 +1,8 @@
 //var User = require('./models/user');
 //var express = require('express');
-
+var bodyParser = require('body-parser');
 var path = require('path');
+var jsonParser = bodyParser.json();
 
 
 
@@ -10,21 +11,21 @@ module.exports = function(router, passport){
 
 	 
 
-	 router.get('/', function(req, res) {
-	 	res.json("Admin Login");
-	 	//res.sendFile(path.join( __dirname, '../public', 'Login.html' ));	
+	 router.get('/', jsonParser, function(req, res) {
+	 	//res.json("Admin Login");
+	 	res.sendFile(path.join( __dirname, '../public', 'Login.html' ));	
 	 });
 
 	 
 
-	 // router.post('/', function(req, res, next){
-	 // 	console.log(req.body);
-	 // 	next();
-	 // });
+	 router.post('/', function(req, res, next){
+	 	console.log(req.body);
+	 	next();
+	 });
 
 	 router.post('/', passport.authenticate('local-login', {
 	 	successRedirect: '/usercontrol',
-	 	failureRedirect: '/adminlogin/fail',
+	 	failureRedirect: '/adminlogin/fail'
 	 	
 	 }));
 
@@ -45,7 +46,7 @@ module.exports = function(router, passport){
 	 router.get('/logout', function(req, res){
 	 	req.logout();
 	 	res.redirect('/');
-	 })
+	 });
 
 	 router.get('/fail', function(req, res){
 	 	res.json("Failed!");
