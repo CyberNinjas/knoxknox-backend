@@ -1,6 +1,7 @@
 var localStrategy = require('passport-local').Strategy;
 var basicStrategy = require('passport-http').BasicStrategy;
 var User  = require('../app/models/user');
+var Slack = require('slack-node');
 
 
 module.exports = function(passport) {
@@ -204,9 +205,31 @@ module.exports = function(passport) {
 				        	return done(null, false);
 				        }
 
-  }				//Debugging Statements
+  }				
+
+
+  			//Push notifications to slack
+  			webhookUri = "https://hooks.slack.com/services/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";
+ 
+			slack = new Slack();
+			slack.setWebhook(webhookUri);
+
+			var payload = "Yubikey " + user.local.yubiKey + " has entered";
+			console.log(payload);
+			 
+			slack.webhook({
+		    channel: "#general",
+		    username: "Knox-Knox Bot",
+		    text: payload
+			}, 
+			function(err, response) {
+		   		console.log(response);
+			});
+ 
+			
+  				//Debugging Statements
  			// 	console.log('Current time ' + new Date().getHours());
-				// console.log('Teusday Start Time ' + user.local.tuesdayStartTime);
+				 //console.log('Teusday Start Time ' + user.local.yubiKey);
 				// console.log('Teusday End Time ' + user.local.tuesdayEndTime);
 				//console.log('User Authenticated! The day is: ' + day);
 

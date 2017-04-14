@@ -7,10 +7,13 @@ module.exports =  function(router, passport){
 	
 	router.post('/',  passport.authenticate('basic',  {
 		session: false,
-		successRedirect: '/api/authenticated',
-	 	failureRedirect: '/api/denied'
+		failureRedirect: '/api/denied'
+		
 	 	
-	 }));
+	 }),
+	function(req, res){
+		res.json('Authenticated!');
+	});
 
 
 
