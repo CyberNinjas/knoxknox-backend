@@ -8,7 +8,7 @@ module.exports =  function(router, passport){
 	});
 
 	
-	router.post('/',  passport.authenticate('basic',  {
+	router.post('/',  passport.authenticate('apiCheck',  {
 		session: false,
 		failureRedirect: '/api/denied'
 		

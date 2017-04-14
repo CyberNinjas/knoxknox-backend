@@ -13,7 +13,7 @@ module.exports = function(router, passport){
 
 	 router.get('/', jsonParser, function(req, res) {
 	 	//res.json("Admin Login");
-	 	res.sendFile(path.join( __dirname, '../public', 'Login.html' ));	
+	 	res.sendFile();	
 	 });
 
 	 

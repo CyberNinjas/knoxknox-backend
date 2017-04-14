@@ -128,7 +128,7 @@ module.exports = function(passport) {
 
 
 	));
-	passport.use(new basicStrategy(
+	passport.use('apiCheck', new localStrategy(
 	{
 		usernameField: 'yubiKey',
 		passwordField: 'pin',
