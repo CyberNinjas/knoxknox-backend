@@ -1,7 +1,10 @@
+var restify = require('restify');
+
+
 module.exports =  function(router, passport){
 	
 	router.get('/', function(req, res){
-		res.json('api!')
+		res.send('api with restful send!');
 	});
 
 	
