@@ -23,6 +23,7 @@
     "passport-azure-ad": "^3.0.5",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
+    "restify": "^4.3.0",
     "slack-node": "^0.1.8"
   }
 }
