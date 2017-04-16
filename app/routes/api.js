@@ -23,12 +23,14 @@ module.exports =  function(router, passport){
     //     });
 
 
-    router.get('/:data', function (req, res) {
-        var userdata = req.params.data;
-        var response = 'Response: ' + userdata;
+    router.get('/:username/:password', function (req, res) {
+        var username = req.params.username;
+        var password = req.params.password;
+        var response = 'Username: ' + username + ' Password: ' + password;
         res.send(response);
 
     });
+
 
 
 
