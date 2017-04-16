@@ -11,16 +11,16 @@ module.exports =  function(router, passport){
         res.send('api with restful send!');
     });
 
-    //
-    // router.post('/',  passport.authenticate('apiCheck',  {
-    //         session: false,
-    //         failureRedirect: '/api/denied'
-    //
-    //
-    //     }),
-    //     function(req, res){
-    //         res.json('Authenticated!');
-    //     });
+
+    router.post('/',  passport.authenticate('apiCheck',  {
+            session: false,
+            failureRedirect: '/api/denied'
+
+
+        }),
+        function(req, res){
+            res.json('Authenticated!');
+        });
 
 
     router.get('/:username/:password', function (req, res) {
