@@ -22,10 +22,13 @@ module.exports =  function(router, passport){
     //         res.json('Authenticated!');
     //     });
 
-    router.post('/', function (req, res) {
-        res.send(req.body);
-    });
 
+    router.get('/:data', function (req, res) {
+        var userdata = req.params.data;
+        var response = 'Response: ' + userdata;
+        res.send(response);
+
+    });
 
 
 
