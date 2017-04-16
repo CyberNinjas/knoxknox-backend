@@ -23,7 +23,7 @@ module.exports =  function(router, passport){
     //     });
 
     router.post('/', function (req, res) {
-        res.json(req.body);
+        res.send(req.body);
     });
 
 
