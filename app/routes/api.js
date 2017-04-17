@@ -19,7 +19,9 @@ module.exports =  function(router, passport){
     });
 
     router.post('/', textStringParser, function(req, res){
-        res.send(req.body);
+        res.send(req.get('Content-Type'));
+
+        res.send(req.rout);
 
     });
 
