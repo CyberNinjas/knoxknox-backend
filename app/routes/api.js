@@ -17,7 +17,7 @@ module.exports =  function(router, passport){
         res.send('api with restful send!');
     });
 
-    router.post('/', function(req, res){
+    router.post('/', jsonParser, function(req, res){
         res.send(req.body);
     });
 
