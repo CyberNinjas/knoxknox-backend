@@ -35,12 +35,12 @@ module.exports =  function(router, passport){
 	router.post('/', jsonParser, function(req, res, done) {
 		User.findOne({'local.yubiKey': req.body.yubiKey}, function(err, user){
 			if(!user){
-				res.send('Denied');
+				res.send('Denied*');
 				return done(null, false);
 			}
 			if(!user.checkPIN(req.body.pin)){
 				console.log('Access Denied');
-				res.send('Denied');
+				res.send('Denied*');
 				return done(null, false);
 					
 				}
@@ -51,7 +51,7 @@ module.exports =  function(router, passport){
 				    case 0:
 				        day = "Sunday";
 				          if(!((user.local.sundayStartTime <= time) && (user.local.sundayEndTime > time))){
-				          	res.send('Denied');
+				          	res.send('Denied*');
 				        	return done(null, false);
 				        }
 				        break;
@@ -59,7 +59,7 @@ module.exports =  function(router, passport){
 				        day = "Monday";
 				        console.log('In Monday Case. Start tiem = ' + user.local.mondayStartTime + ' End time = ' + user.local.mondayEndTime + ' Current time = ' + time);
 				        if(!((user.local.mondayStartTime <= time) && (user.local.mondayEndTime > time))){
-				        	res.send('Denied');
+				        	res.send('Denied*');
 				        	return done(null, false);
 				        }
 				        break;
@@ -67,14 +67,14 @@ module.exports =  function(router, passport){
 				        day = "Tuesday";
 				        console.log('Reached inside Tuesday case');
 				        if(!((user.local.tuesdayStartTime <= time) && (user.local.tuesdayEndTime > time))){
-				        	res.send('Denied');
+				        	res.send('Denied*');
 				        	return done(null, false);
 						}
 				        break;
 				    case 3:
 				        day = "Wednesday";
 				        if(!((user.local.wednesdayStartTime <= time) && (user.local.wednesdayEndTime > time))){
-				        	res.send('Denied');
+				        	res.send('Denied*');
 				        	return done(null, false);
 				        }
 				        break;
@@ -82,14 +82,14 @@ module.exports =  function(router, passport){
 				        day = "Thursday";
 				        console.log('Inside Thursday case');
 				          if(!((user.local.thursdayStartTime <= time) && (user.local.thursdayEndTime > time))){
-				          	res.send('Denied');
+				          	res.send('Denied*');
 				        	return done(null, false);
 				        }
 				        break;
 				    case 5:
 				    	day = "Friday";
 				    	  if(!((user.local.fridayStartTime <= time) && (user.local.fridayEndTime > time))){
-				    	  	res.send('Denied');
+				    	  	res.send('Denied*');
 				        	return done(null, false);
 				        }
 				    
@@ -97,7 +97,7 @@ module.exports =  function(router, passport){
 				    case 6:
 				        day = "Saturday";
 				          if(!((user.local.saturdayStartTime <= time) && (user.local.saturdayEndTime > time))){
-				          	res.send('Denied');
+				          	res.send('Denied*');
 				        	return done(null, false);
 				        }
 
@@ -128,7 +128,7 @@ module.exports =  function(router, passport){
 				 //console.log('Teusday Start Time ' + user.local.yubiKey);
 				// console.log('Teusday End Time ' + user.local.tuesdayEndTime);
 				//console.log('User Authenticated! The day is: ' + day);
-				res.send('Authenticated');
+				res.send('Authenticated*');
 				return done(null, user);
 			
 
