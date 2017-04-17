@@ -26,15 +26,15 @@ module.exports = function(passport) {
 	//Create new user.
 	function(req, username, password, done){
 		process.nextTick(function(){
-			User.findOne({'local.username': username}, function(err, user){
+			User.findOne({'admin.username': username}, function(err, user){
 				if(err)
 					return done(err);
 				if(user){
 					return done(null, false, req.flash('signupMessage', 'That username is already taken'));
 				} else {
 					var newUser = new User();
-					newUser.local.username = username;
-					newUser.local.password = newUser.hashPassword(password);
+					newUser.admin.username = username;
+					newUser.admin.password = newUser.hashPassword(password);
 					newUser.save(function(err){
 						if(err)
 							throw err;
@@ -65,7 +65,8 @@ module.exports = function(passport) {
 					var newUser = new User();
 					newUser.local.yubiKey = yubiKey;
 					newUser.local.pin = newUser.hashPIN(pin);
-					newUser.local.mondaStartTime = req.body.mondayStartTime;
+					newUser.local.username = req.body.username;
+					newUser.local.mondayStartTime = req.body.mondayStartTime;
 					newUser.local.tuesdayStartTime = req.body.tuesdayStartTime;
 					newUser.local.wednesdayStartTime = req.body.wednesdayStartTime;
 					newUser.local.thursdayStartTime = req.body.thursdayStartTime;
@@ -106,7 +107,7 @@ module.exports = function(passport) {
 	//check that admin usernmae and passord are valid
 	function(req, username, password, done){
 		process.nextTick(function(){
-			User.findOne({'local.username': username}, function(err, user){
+			User.findOne({'admin.username': username}, function(err, user){
 				if(err){
 					return done(err);
 				}
@@ -128,118 +129,118 @@ module.exports = function(passport) {
 
 
 	));
-	passport.use('apiCheck', new localStrategy(
-	{
-		usernameField: 'yubiKey',
-		passwordField: 'pin',
-		passReqToCallback: true
+	// passport.use('apiCheck', new localStrategy(
+	// {
+	// 	usernameField: 'yubiKey',
+	// 	passwordField: 'pin',
+	// 	passReqToCallback: true
 
-	},
+	// },
 	
 
-	//check that yubikey, pin and time are valid
-	function(req, yubiKey, pin, done){
+	// //check that yubikey, pin and time are valid
+	// function(req, yubiKey, pin, done){
 
-		process.nextTick(function(){
-			User.findOne({'local.yubiKey': yubiKey}, function(err, user){
-				if(err){
-					return done(err);
-				}
-				if (!user){
-					console.log('Access Denied');
-					return done(null, false, req.flash('loginMessage', 'No user found, please creae a new user'));
+	// 	process.nextTick(function(){
+	// 		User.findOne({'local.yubiKey': yubiKey}, function(err, user){
+	// 			if(err){
+	// 				return done(err);
+	// 			}
+	// 			if (!user){
+	// 				console.log('Access Denied');
+	// 				return done(null, false, req.flash('loginMessage', 'No user found, please creae a new user'));
 					
-				}
-				if(!user.checkPIN(pin)){
-					console.log('Access Denied');
-					return done(null, false, req.flash('loginMessage', 'Password is incorrect'));
+	// 			}
+	// 			if(!user.checkPIN(pin)){
+	// 				console.log('Access Denied');
+	// 				return done(null, false, req.flash('loginMessage', 'Password is incorrect'));
 					
-				}
+	// 			}
 
-				var time = Number(new Date().getHours());
-				var day = String;
+	// 			var time = Number(new Date().getHours());
+	// 			var day = String;
 
-				switch (new Date().getDay()) {
-				    case 0:
-				        day = "Sunday";
-				          if(!((user.local.sundayStartTime <= time) && (user.local.sundayEndTime > time))){
-				        	return done(null, false);
-				        }
-				        break;
-				    case 1:
-				        day = "Monday";
-				        if(!((user.local.mondayStartTime <= time) && (user.local.mondayEndTime > time))){
-				        	return done(null, false);
-				        }
-				        break;
-				    case 2:
-				        day = "Tuesday";
-				        console.log('Reached inside Tuesday case');
-				        if(!((user.local.tuesdayStartTime <= time) && (user.local.tuesdayEndTime > time))){
-				        	return done(null, false);
-						}
-				        break;
-				    case 3:
-				        day = "Wednesday";
-				        if(!((user.local.wednesdayStartTime <= time) && (user.local.wednesdayEndTime > time))){
-				        	return done(null, false);
-				        }
-				        break;
-				    case 4:
-				        day = "Thursday";
-				        console.log('Inside Thursday case');
-				          if(!((user.local.thursdayStartTime <= time) && (user.local.thursdayEndTime > time))){
-				        	return done(null, false);
-				        }
-				        break;
-				    case 5:
-				    	day = "Friday";
-				    	  if(!((user.local.fridayStartTime <= time) && (user.local.fridayEndTime > time))){
-				        	return done(null, false);
-				        }
+	// 			switch (new Date().getDay()) {
+	// 			    case 0:
+	// 			        day = "Sunday";
+	// 			          if(!((user.local.sundayStartTime <= time) && (user.local.sundayEndTime > time))){
+	// 			        	return done(null, false);
+	// 			        }
+	// 			        break;
+	// 			    case 1:
+	// 			        day = "Monday";
+	// 			        if(!((user.local.mondayStartTime <= time) && (user.local.mondayEndTime > time))){
+	// 			        	return done(null, false);
+	// 			        }
+	// 			        break;
+	// 			    case 2:
+	// 			        day = "Tuesday";
+	// 			        console.log('Reached inside Tuesday case');
+	// 			        if(!((user.local.tuesdayStartTime <= time) && (user.local.tuesdayEndTime > time))){
+	// 			        	return done(null, false);
+	// 					}
+	// 			        break;
+	// 			    case 3:
+	// 			        day = "Wednesday";
+	// 			        if(!((user.local.wednesdayStartTime <= time) && (user.local.wednesdayEndTime > time))){
+	// 			        	return done(null, false);
+	// 			        }
+	// 			        break;
+	// 			    case 4:
+	// 			        day = "Thursday";
+	// 			        console.log('Inside Thursday case');
+	// 			          if(!((user.local.thursdayStartTime <= time) && (user.local.thursdayEndTime > time))){
+	// 			        	return done(null, false);
+	// 			        }
+	// 			        break;
+	// 			    case 5:
+	// 			    	day = "Friday";
+	// 			    	  if(!((user.local.fridayStartTime <= time) && (user.local.fridayEndTime > time))){
+	// 			        	return done(null, false);
+	// 			        }
 				    
-				        break;
-				    case 6:
-				        day = "Saturday";
-				          if(!((user.local.saturdayStartTime <= time) && (user.local.saturdayEndTime > time))){
-				        	return done(null, false);
-				        }
+	// 			        break;
+	// 			    case 6:
+	// 			        day = "Saturday";
+	// 			          if(!((user.local.saturdayStartTime <= time) && (user.local.saturdayEndTime > time))){
+	// 			        	return done(null, false);
+	// 			        }
 
-  }				
+ //  }				
 
 
-  			//Push notifications to slack
-  			webhookUri = "https://hooks.slack.com/services/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";
+  	// 		//Push notifications to slack
+  	// 		webhookUri = "https://hooks.slack.com/services/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";
  
-			slack = new Slack();
-			slack.setWebhook(webhookUri);
+			// slack = new Slack();
+			// slack.setWebhook(webhookUri);
 
-			var payload = "Yubikey " + user.local.yubiKey + " has entered";
-			console.log(payload);
+			// var payload = "Yubikey " + user.local.yubiKey + " has entered";
+			// console.log(payload);
 			 
-			slack.webhook({
-		    channel: "#general",
-		    username: "Knox-Knox Bot",
-		    text: payload
-			}, 
-			function(err, response) {
-		   		console.log(response);
-			});
+			// slack.webhook({
+		 //    channel: "#general",
+		 //    username: "Knox-Knox Bot",
+		 //    text: payload
+			// }, 
+			// function(err, response) {
+		 //   		console.log(response);
+			// });
  
 			
-  				//Debugging Statements
- 			// 	console.log('Current time ' + new Date().getHours());
-				 //console.log('Teusday Start Time ' + user.local.yubiKey);
-				// console.log('Teusday End Time ' + user.local.tuesdayEndTime);
-				//console.log('User Authenticated! The day is: ' + day);
+  	// 			//Debugging Statements
+ 		// 	// 	console.log('Current time ' + new Date().getHours());
+			// 	 //console.log('Teusday Start Time ' + user.local.yubiKey);
+			// 	// console.log('Teusday End Time ' + user.local.tuesdayEndTime);
+			// 	//console.log('User Authenticated! The day is: ' + day);
 
-				return done(null, user);
-			});
-		})
-	}
+			// 	return done(null, user);
+			// });
+	// 	})
+	// }
 
 
-	));
+	//));
 
 
 

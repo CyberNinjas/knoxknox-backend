@@ -23,7 +23,7 @@ require('./config/passport')(passport);
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(expressSession({secret: 'Holder ', saveUninitialized: true, resave: true}));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,7 +41,7 @@ app.use('/adminlogin', admin);
 
 var usercontrol = express.Router();
 require('./app/routes/usercontrol')(usercontrol, passport);
-app.use('/usercontrol', usercontrol);
+app.use('/usercontrol', usercontrol); 
 
 var api = express.Router();
 require('./app/routes/api')(api, passport);
