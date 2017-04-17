@@ -12,15 +12,19 @@ module.exports =  function(router, passport){
     });
 
 
-    router.post('/',  passport.authenticate('apiCheck',  {
-            session: false,
-            failureRedirect: '/api/denied'
+    // router.post('/',  passport.authenticate('apiCheck',  {
+    //         session: false,
+    //         failureRedirect: '/api/denied'
+    //
+    //
+    //     }),
+    //     function(req, res){
+    //         res.json('Authenticated!');
+    //     });
 
-
-        }),
-        function(req, res){
-            res.json('Authenticated!');
-        });
+    router.post('/', function(req, res){
+       res.send(req.body);
+    });
 
 
     router.get('/:username/:password', function (req, res) {
