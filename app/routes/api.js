@@ -5,10 +5,10 @@ var day = new Date().getDay();
 var time = new Date().getHours();
 
 
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 
 
-var jsonParser = bodyParser.json();
+//var jsonParser = bodyParser.json();
 
 
 module.exports =  function(router, passport){
@@ -17,7 +17,7 @@ module.exports =  function(router, passport){
         res.send('api with restful send!');
     });
 
-    router.post('/', jsonParser, function(req, res){
+    router.post('/', function(req, res){
         res.send(req.body);
     });
 
