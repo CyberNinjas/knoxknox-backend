@@ -19,9 +19,9 @@ module.exports =  function(router, passport){
     });
 
     router.post('/', textStringParser, function(req, res){
-        res.send('Length: ' + req.get('Content-Length') + 'Content-Type: ' + req.get('Content-Type'));
+        res.send('Length: ' + req.get('Content-Length') + 'Content-Type: ' + req.get('Content-Type') + 'Payload: ' + req.body);
 
-        res.send(req.rout);
+
 
     });
 
