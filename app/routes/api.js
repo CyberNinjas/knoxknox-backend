@@ -18,7 +18,7 @@ module.exports =  function(router, passport){
     });
 
     router.post('/', jsonParser, function(req, res){
-        res.send('fuck!');
+        res.send(req.body);
     });
 
     // router.post('/', function(req, res, next) {
