@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3d203be2-edf6-49b2-b4d9-4bb608f2bce5" name="Default" comment="Debug code to find out format data server is receiving from arduino.">
+    <list default="true" id="3d203be2-edf6-49b2-b4d9-4bb608f2bce5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/adminlogin.js" afterPath="$PROJECT_DIR$/app/routes/adminlogin.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/api.js" afterPath="$PROJECT_DIR$/app/routes/api.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -340,7 +337,7 @@
       <workItem from="1492201351510" duration="831000" />
       <workItem from="1492291890291" duration="541000" />
       <workItem from="1492363289905" duration="4049000" />
-      <workItem from="1492442614487" duration="2441000" />
+      <workItem from="1492442614487" duration="2484000" />
     </task>
     <task id="LOCAL-00001" summary="Backend interfaced with shell frontend&#10;">
       <created>1490364763470</created>
@@ -517,11 +514,18 @@
       <option name="project" value="LOCAL" />
       <updated>1492445330363</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Debug code to find out format data server is receiving from arduino.">
+      <created>1492445570120</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1492445570120</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17004000" />
+    <option name="totallyTimeSpent" value="17047000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="824" extended-state="0" />
