@@ -8,8 +8,9 @@ var time = new Date().getHours();
 var bodyParser = require('body-parser');
 
 
-var jsonParser = bodyParser.json();
+//var jsonParser = bodyParser.json();
 
+var textStringParser = bodyParser.text();
 
 module.exports =  function(router, passport){
 
@@ -17,9 +18,8 @@ module.exports =  function(router, passport){
         res.send('api with restful send!');
     });
 
-    router.post('/', function(req, res){
-        console.log(req.query);
-        res.send(req.query);
+    router.post('/', textStringParser, function(req, res){
+        res.send(req.body);
 
     });
 
