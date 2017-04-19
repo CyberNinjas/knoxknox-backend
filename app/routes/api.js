@@ -50,9 +50,9 @@ module.exports =  function(router, passport){
 			}
 			if((Number(user.local.attempts) >= 2)){
 					res.send('[noack]*');
-					payload = "<!channel> " + user.local.username + " has reached their maximum failed pin attempts";
+					payload = "<!channel> " + user.local.username + " has reached their maximum failed attempts action needed to re-activate";
 					slackNotify(payload, Slack);
-					removeUser(user.local.yubiKey);
+					//removeUser(user.local.yubiKey);
 					return done(null, false);
 
 				}
