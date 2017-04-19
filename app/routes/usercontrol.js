@@ -24,13 +24,12 @@ module.exports =  function(router, passport){
 	  });
 
 	router.delete('/', function(req, res){
-		User.findOneAndRemove(req.body.yubiKey, function(err, user){
+		User.findOneAndRemove({'local.yubiKey': req.body.yubiKey}, function(err, user){
 			var response = {
         		message: "User removed",
         		yubikey: user.local.yubiKey
     		};
     		res.send(response);
-    		//res.redirect('/')
 		});
 	});
 

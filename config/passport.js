@@ -1,7 +1,7 @@
 var localStrategy = require('passport-local').Strategy;
-var basicStrategy = require('passport-http').BasicStrategy;
+//var basicStrategy = require('passport-http').BasicStrategy;
 var User  = require('../app/models/user');
-var Slack = require('slack-node');
+//var Slack = require('slack-node');
 
 
 module.exports = function(passport) {
@@ -65,6 +65,7 @@ module.exports = function(passport) {
 					var newUser = new User();
 					newUser.local.yubiKey = yubiKey;
 					newUser.local.pin = newUser.hashPIN(pin);
+					newUser.local.attempts = 0;
 					newUser.local.username = req.body.username;
 					newUser.local.mondayStartTime = req.body.mondayStartTime;
 					newUser.local.tuesdayStartTime = req.body.tuesdayStartTime;

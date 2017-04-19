@@ -3,9 +3,12 @@ var bcrypt = require('bcrypt');
 
 var userSchema = mongoose.Schema({
 	local:{
-		username: String,
+		username: { type: String,
+					lowercase: true
+				},
 		pin: String,
 		yubiKey: String,
+		attempts: Number,
 		mondayStartTime: Number,
 		tuesdayStartTime: Number,
 		wednesdayStartTime: Number,
@@ -62,5 +65,7 @@ userSchema.methods.checkPIN = function(pin){
 	
 	
 };
+
+
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,6 +1,6 @@
 var restify = require('restify');
 
-var day = new Date().getDay();
+//var day = new Date().getDay();
 
 var time = new Date().getHours();
 
@@ -8,11 +8,29 @@ var User  = require('../models/user');
 
 var Slack = require('slack-node');
 
+var payload = '';
+
+removeUser = function(user){
+	User.findOneAndRemove({'local.yubiKey': user}, function(err, user){
+    		
+		});
+	};
+incrementAttempt = function(user, done){
+	user.local.attempts = user.local.attempts + 1;
+		user.save(function(err){
+
+			if(err)
+				throw err;
+			return done(null, user);
+		});	
+		console.log('Attempts ' + user.local.attempts);
+
+};
+
 
 
 
 var bodyParser = require('body-parser');
-
 
 var jsonParser = bodyParser.json();
 
@@ -20,30 +38,34 @@ var jsonParser = bodyParser.json();
 
 module.exports =  function(router, passport){
 	
-	router.get('/', function(req, res){
+	router.get('/', jsonParser, function(req, res){
 		res.send('api with restful send!');
 	});
 
- 	// router.post('/', textStringParser, function(req, res){
-  //       res.send(' Length: ' + req.get('Content-Length') + ' Content-Type: ' + req.get('Content-Type') + 'Payload: ' + req.body);
-
-
-
-  //   });
-
-
-	router.post('/', jsonParser, function(req, res, done) {
+	router.post('/', function(req, res, done) {
 		User.findOne({'local.yubiKey': req.body.yubiKey}, function(err, user){
 			if(!user){
 				res.send('[noack]*');
 				return done(null, false);
 			}
+			if((Number(user.local.attempts) >= 2)){
+					res.send('[noack]*');
+					payload = "<!channel> " + user.local.username + " has reached their maximum failed pin attempts";
+					slackNotify(payload, Slack);
+					removeUser(user.local.yubiKey);
+					return done(null, false);
+
+				}
 			if(!user.checkPIN(req.body.pin)){
 				console.log('Access Denied');
+				incrementAttempt(user, done);
+				
 				res.send('[noack]*');
 				return done(null, false);
 					
 				}
+
+			
 			    var time = Number(new Date().getHours());
 				var day = String;
 
@@ -52,6 +74,10 @@ module.exports =  function(router, passport){
 				        day = "Sunday";
 				          if(!((user.local.sundayStartTime <= time) && (user.local.sundayEndTime > time))){
 				          	res.send('[noack]*');
+				          	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.sundayStartTime + " to " + user.local.sundayEndTime;
+				          	slackNotify(payload, Slack);
+				          	incrementAttempt(user, done);
+
 				        	return done(null, false);
 				        }
 				        break;
@@ -60,6 +86,10 @@ module.exports =  function(router, passport){
 				        console.log('In Monday Case. Start tiem = ' + user.local.mondayStartTime + ' End time = ' + user.local.mondayEndTime + ' Current time = ' + time);
 				        if(!((user.local.mondayStartTime <= time) && (user.local.mondayEndTime > time))){
 				        	res.send('[noack]*');
+				        	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.mondayStartTime + " to " + user.local.mondayEndTime;
+				        	slackNotify(payload, Slack);
+				        	incrementAttempt(user, done);
+
 				        	return done(null, false);
 				        }
 				        break;
@@ -68,6 +98,10 @@ module.exports =  function(router, passport){
 				        console.log('Reached inside Tuesday case');
 				        if(!((user.local.tuesdayStartTime <= time) && (user.local.tuesdayEndTime > time))){
 				        	res.send('[noack]*');
+				        	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.tuesdayStartTime + " to " + user.local.tuesdayEndTime;
+				        	slackNotify(payload, Slack);
+				        	incrementAttempt(user, done);
+
 				        	return done(null, false);
 						}
 				        break;
@@ -75,6 +109,10 @@ module.exports =  function(router, passport){
 				        day = "Wednesday";
 				        if(!((user.local.wednesdayStartTime <= time) && (user.local.wednesdayEndTime > time))){
 				        	res.send('[noack]*');
+				        	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.wednesdayStartTime + " to " + user.local.wednesdayEndTime;
+				        	slackNotify(payload, Slack);
+				        	incrementAttempt(user, done);
+
 				        	return done(null, false);
 				        }
 				        break;
@@ -83,6 +121,10 @@ module.exports =  function(router, passport){
 				        console.log('Inside Thursday case');
 				          if(!((user.local.thursdayStartTime <= time) && (user.local.thursdayEndTime > time))){
 				          	res.send('[noack]*');
+				          	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.thursdayStartTime + " to " + user.local.thursdayEndTime;
+				          	slackNotify(payload, Slack);
+				          	incrementAttempt(user, done);
+
 				        	return done(null, false);
 				        }
 				        break;
@@ -90,6 +132,10 @@ module.exports =  function(router, passport){
 				    	day = "Friday";
 				    	  if(!((user.local.fridayStartTime <= time) && (user.local.fridayEndTime > time))){
 				    	  	res.send('[noack]*');
+				    	  	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.fridayStartTime + " to " + user.local.fridayEndTime;
+				    	  	slackNotify(payload, Slack);
+				    	  	incrementAttempt(user, done);
+
 				        	return done(null, false);
 				        }
 				    
@@ -98,36 +144,28 @@ module.exports =  function(router, passport){
 				        day = "Saturday";
 				          if(!((user.local.saturdayStartTime <= time) && (user.local.saturdayEndTime > time))){
 				          	res.send('[noack]*');
+				          	payload = "<!channel> " + user.local.username + " is attempting to enter outside of their normal hours.\n They are allowed access from " + user.local.saturdayStartTime + " to " + user.local.saturdayEndTime;
+				          	slackNotify(payload, Slack);
+				          	incrementAttempt(user, done);
+
 				        	return done(null, false);
 				        }
 
   }				
+  				user.local.attempts = 0;
+					user.save(function(err){
+
+						if(err)
+							throw err;
+						return done(null, user);
+					});
+					console.log('Attempts ' + user.local.attempts);
+
+				
 
 
-  			//Push notifications to slack
-  			webhookUri = "https://hooks.slack.com/services/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";
- 
-			slack = new Slack();
-			slack.setWebhook(webhookUri);
-
-			var payload = user.local.username + " has entered";
-			console.log(payload);
-			 
-			slack.webhook({
-		    channel: "#general",
-		    username: "Knox-Knox Bot",
-		    text: payload
-			}, 
-			function(err, response) {
-		   		console.log(response);
-			});
- 
-			
-  				//Debugging Statements
- 			// 	console.log('Current time ' + new Date().getHours());
-				 //console.log('Teusday Start Time ' + user.local.yubiKey);
-				// console.log('Teusday End Time ' + user.local.tuesdayEndTime);
-				//console.log('User Authenticated! The day is: ' + day);
+				payload = user.local.username + " has entered";
+				slackNotify(payload, Slack);
 				res.send('[ack]*');
 				return done(null, user);
 			
@@ -136,6 +174,28 @@ module.exports =  function(router, passport){
 
 		});
 	});
+
+
+slackNotify = function(payload, slack){
+	//Push notifications to slack
+	webhookUri = "https://hooks.slack.com/services/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";
+
+	slack = new Slack();
+	slack.setWebhook(webhookUri);
+
+	console.log(payload);
+	 
+	slack.webhook({
+    channel: "#general",
+    username: "Knox-Knox Bot",
+    text: payload
+	}, 
+	function(err, response) {
+   		console.log(response);
+	});
+
+
+};
   		
 
 
@@ -146,22 +206,6 @@ module.exports =  function(router, passport){
       res.send(response);
    	  
     });
-
-
-
-
-	router.get('/authenticated', passport.authenticate('basic',  {session: false}), function(req, res){
-		// if(!req.isAuthenticated())
-		// 	res.redirect('/api/potato')
-		res.json('Authenticated!')
-	});	
-
-
-	router.get('/denied', function(req, res){
-		res.json('Denied! The day is ' + day + ' The hour is ' + time);
-	});	
-
-
 	
 
 };

@@ -1,7 +1,7 @@
 //var User = require('./models/user');
 //var express = require('express');
 //var bodyParser = require('body-parser');
-var path = require('path');
+//var path = require('path');
 //var jsonParser = bodyParser.json()
 
 
@@ -11,10 +11,9 @@ module.exports = function(router, passport){
 
 	 
 
-	 // router.get('/', jsonParser, function(req, res) {
-	 // 	//res.json("Admin Login");
-	 // 	res.sendFile();	
-	 // });
+	 router.get('/', function(req, res) {
+	 	res.json("Admin Login");
+	 });
 
 	 
 
