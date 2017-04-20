@@ -45,6 +45,8 @@ module.exports =  function(router, passport){
 	router.post('/', function(req, res, done) {
 		User.findOne({'local.yubiKey': req.body.yubiKey}, function(err, user){
 			if(!user){
+                payload = "<!channel> Non registered user RFID key: " + req.body.yubiKey + " has tried to access the building";
+                slackNotify(payload, Slack);
 				res.send('[noack]*');
 				return done(null, false);
 			}
