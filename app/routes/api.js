@@ -1,6 +1,6 @@
 var restify = require('restify');
 
-//var day = new Date().getDay();
+var day = new Date().getDay();
 
 var time = new Date().getHours();
 
@@ -10,11 +10,20 @@ var Slack = require('slack-node');
 
 var payload = '';
 
+
+var bodyParser = require('body-parser');
+
+var jsonParser = bodyParser.json();
+
+//Remove user function
+
 removeUser = function(user){
 	User.findOneAndRemove({'local.yubiKey': user}, function(err, user){
     		
 		});
 	};
+
+//Increment the numer of times a user fails authentication
 incrementAttempt = function(user, done){
 	user.local.attempts = user.local.attempts + 1;
 		user.save(function(err){
@@ -30,29 +39,27 @@ incrementAttempt = function(user, done){
 
 
 
-var bodyParser = require('body-parser');
 
-var jsonParser = bodyParser.json();
-
-//var textStringParser = bodyParser.text();
 
 module.exports =  function(router, passport){
 	
-	router.get('/', jsonParser, function(req, res){
+	router.get('/', function(req, res){
 		res.send('api with restful send!');
 	});
 
+	//Validate entry request
 	router.post('/', function(req, res, done) {
 		User.findOne({'local.yubiKey': req.body.yubiKey}, function(err, user){
 			if(!user){
-                payload = "<!channel> Non registered user RFID key: " + req.body.yubiKey + " has tried to access the building";
-                slackNotify(payload, Slack);
+				payload = "<!channel> Non registered user RFID key: " + req.body.yubiKey + " has tried to access the building";
+				slackNotify(payload, Slack);
 				res.send('[noack]*');
 				return done(null, false);
 			}
-			if((Number(user.local.attempts) >= 2)){
+			//Deactive user if failed attempts = 5
+			if((Number(user.local.attempts) >= 4)){
 					res.send('[noack]*');
-					payload = "<!channel> " + user.local.username + " has reached their maximum failed attempts action needed to re-activate";
+					payload = "<!channel> " + user.local.username + " has reached their maximum failed pin attempts";
 					slackNotify(payload, Slack);
 					//removeUser(user.local.yubiKey);
 					return done(null, false);
@@ -67,6 +74,7 @@ module.exports =  function(router, passport){
 					
 				}
 
+				//Confirm user has access at current time
 			
 			    var time = Number(new Date().getHours());
 				var day = String;
@@ -153,7 +161,7 @@ module.exports =  function(router, passport){
 				        	return done(null, false);
 				        }
 
-  }				
+  }				//Reset failed attempts to 0 if user is succesfully authenticated
   				user.local.attempts = 0;
 					user.save(function(err){
 
@@ -178,8 +186,9 @@ module.exports =  function(router, passport){
 	});
 
 
+//Push notification to slack with the appropriate payload
 slackNotify = function(payload, slack){
-	//Push notifications to slack
+	
 	webhookUri = "https://hooks.slack.com/services/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";
 
 	slack = new Slack();
@@ -201,13 +210,6 @@ slackNotify = function(payload, slack){
   		
 
 
-  router.get('/:username/:password', function (req, res) {
-      var username = req.params.username;
-      var password = req.params.password;
-      var response = 'Username: ' + username + ' Password: ' + password;
-      res.send(response);
-   	  
-    });
 	
 
 };

@@ -26,15 +26,16 @@ module.exports = function(passport) {
 	//Create new user.
 	function(req, username, password, done){
 		process.nextTick(function(){
-			User.findOne({'admin.username': username}, function(err, user){
+			User.findOne({'local.username': username}, function(err, user){
 				if(err)
 					return done(err);
 				if(user){
 					return done(null, false, req.flash('signupMessage', 'That username is already taken'));
 				} else {
 					var newUser = new User();
-					newUser.admin.username = username;
-					newUser.admin.password = newUser.hashPassword(password);
+					newUser.local.username = username;
+					newUser.local.password = newUser.hashPassword(password);
+					newUser.local.admin = true;
 					newUser.save(function(err){
 						if(err)
 							throw err;
@@ -59,7 +60,7 @@ module.exports = function(passport) {
 				if(err)
 					return done(err);
 				if(user){
-					return done(null, false, req.flash('signupMessage', 'That username is already taken'));
+					return done(null, false);
 				} else {
 					
 					var newUser = new User();
@@ -108,18 +109,19 @@ module.exports = function(passport) {
 	//check that admin usernmae and passord are valid
 	function(req, username, password, done){
 		process.nextTick(function(){
-			User.findOne({'admin.username': username}, function(err, user){
+			User.findOne({'local.username': username.toLowerCase()}, function(err, user){
 				if(err){
+					console.log('Error');
 					return done(err);
 				}
 				if (!user){
-					//console.log('Access Denied');
-					return done(null, false, req.flash('loginMessage', 'No user found, please creae a new user'));
+					console.log('No user');
+					return done(null, false);
 					
 				}
 				if(!user.checkPassword(password)){
-					console.log('Access Denied');
-					return done(null, false, req.flash('loginMessage', 'Password is incorrect'));
+					console.log('password');
+					return done(null, false);
 					
 				}
 				console.log('User Authenticated!');

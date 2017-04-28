@@ -1,10 +1,3 @@
-//var User = require('./models/user');
-//var express = require('express');
-//var bodyParser = require('body-parser');
-//var path = require('path');
-//var jsonParser = bodyParser.json()
-
-
 
 module.exports = function(router, passport){
 
@@ -28,15 +21,6 @@ module.exports = function(router, passport){
 	 	
 	 }));
 
-	 router.get('/signup', function(req, res){
-	 	res.json('SignupPage')
-	 });
-
-	 router.post('/signup', passport.authenticate('addAdmin', {
-	 	successRedirect: '/',
-	 	failureRedirect: '/adminlogin/fail',
-	 	failureFlash: true
-	 }));
 
 
 	 
