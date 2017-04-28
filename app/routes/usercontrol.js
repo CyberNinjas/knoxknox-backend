@@ -2,13 +2,13 @@ var User  = require('../models/user');
 
 //Redirect to admin login if admin is not logged in
 module.exports =  function(router, passport){
-	router.use(function(req, res, next){
-		if(req.isAuthenticated()){
-	 		return next();
-	 	} 
-	 	
-	 	res.redirect('/adminlogin');
-	});
+	// router.use(function(req, res, next){
+	// 	if(req.isAuthenticated()){
+	//  		return next();
+	//  	}
+	//
+	//  	res.redirect('/adminlogin');
+	// });
 //List all useres and their assigned yubiKey ID
 	router.get('/', function(req, res) {
 	    User.find({}, function(err, users) {
